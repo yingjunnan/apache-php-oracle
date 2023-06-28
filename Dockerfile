@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y \
     libaio1 \
     libpq-dev \
     libzip-dev \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+    curl && \
+    rm -rf /var/lib/apt/lists/*
 
 # 设置环境变量
 ENV ORACLE_HOME=/opt/oracle/instantclient
@@ -32,10 +32,10 @@ RUN unzip /tmp/instantclient-basic-linux.x64-19.19.0.0.0dbru.zip -d /opt/oracle/
     unzip /tmp/instantclient-sdk-linux.x64-19.19.0.0.0dbru.zip -d /opt/oracle/instantclient && \
     rm /tmp/instantclient-basic-linux.x64-19.19.0.0.0dbru.zip && \
     rm /tmp/instantclient-sdk-linux.x64-19.19.0.0.0dbru.zip && \
-    && ln -s /opt/oracle/instantclient/libclntsh.so.19.1 /opt/oracle/instantclient/libclntsh.so \
-    && ln -s /opt/oracle/instantclient/libocci.so.19.1 /opt/oracle/instantclient/libocci.so \
-    && echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf \
-    && ldconfig
+    ln -s /opt/oracle/instantclient/libclntsh.so.19.1 /opt/oracle/instantclient/libclntsh.so && \
+    ln -s /opt/oracle/instantclient/libocci.so.19.1 /opt/oracle/instantclient/libocci.so && \
+    echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf && \
+    ldconfig
 
 # 安装Oracle扩展
 RUN echo 'instantclient,/opt/oracle/instantclient' | pecl install oci8-2.2.0 \
