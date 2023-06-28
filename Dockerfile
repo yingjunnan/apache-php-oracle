@@ -10,25 +10,27 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# 设置环境变量
+ENV ORACLE_HOME=/usr/lib/oracle/12.2/client64
+ENV LD_LIBRARY_PATH=$ORACLE_HOME/lib
+ENV PATH=$ORACLE_HOME/bin:$PATH
+
 # 安装MySQL扩展
 RUN docker-php-ext-install pdo_mysql mysqli
 
 # 安装Redis扩展
 RUN pecl install redis && docker-php-ext-enable redis
 
-# 下载并安装Oracle Instant Client
-RUN mkdir /opt/oracle && chmod 777 /opt/oracle
-RUN cd /opt/oracle
-RUN curl -o /opt/oracle/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip https://download.oracle.com/otn_software/linux/instantclient/198000/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip
-RUN curl -o /opt/oracle/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip https://download.oracle.com/otn_software/linux/instantclient/198000/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip
-RUN unzip /opt/oracle/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip
-RUN unzip /opt/oracle/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip
-RUN rm -f *.zip
-RUN mv /opt/oracle/instantclient_19_8 /opt/oracle/instantclient
-RUN ln -s /opt/oracle/instantclient/libclntsh.so.19.1 /opt/oracle/instantclient/libclntsh.so
-RUN ln -s /opt/oracle/instantclient/libocci.so.19.1 /opt/oracle/instantclient/libocci.so
-RUN echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf
-RUN ldconfig
+# 下载Oracle Instant Client安装包
+ADD https://download.oracle.com/otn_software/linux/instantclient/19800/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip /tmp/
+
+
+# 解压安装包并设置Oracle环境变量
+RUN unzip /tmp/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip -d /usr/lib/oracle/12.2/ && \
+    rm /tmp/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip && \
+    ln -s /usr/lib/oracle/12.2/instantclient_19_8 $ORACLE_HOME && \
+    echo $ORACLE_HOME > /etc/ld.so.conf.d/oracle.conf && \
+    ldconfig
 
 # 安装Oracle扩展
 RUN echo 'instantclient,/opt/oracle/instantclient' | pecl install oci8 \
@@ -42,12 +44,8 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# 设置环境变量
-ENV LD_LIBRARY_PATH /opt/oracle/instantclient
-ENV ORACLE_HOME /opt/oracle/instantclient
-
 # 将本地代码复制到容器中的/var/www/html目录
-COPY . /var/www/html
+# COPY . /var/www/html
 
 # 暴露Apache的80端口
 EXPOSE 80
