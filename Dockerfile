@@ -17,19 +17,18 @@ RUN docker-php-ext-install pdo_mysql mysqli
 RUN pecl install redis && docker-php-ext-enable redis
 
 # 下载并安装Oracle Instant Client
-RUN mkdir /opt/oracle \
-    && cd /opt/oracle \
-    && chmod 777 /opt/oracle \
-    && curl -o instantclient-basic-linux.x64-19.8.0.0.0dbru.zip https://download.oracle.com/otn_software/linux/instantclient/198000/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip \
-    && curl -o instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip https://download.oracle.com/otn_software/linux/instantclient/198000/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip \
-    && unzip instantclient-basic-linux.x64-19.8.0.0.0dbru.zip \
-    && unzip instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip \
-    && rm -f *.zip \
-    && mv instantclient_19_8 /opt/oracle/instantclient \
-    && ln -s /opt/oracle/instantclient/libclntsh.so.19.1 /opt/oracle/instantclient/libclntsh.so \
-    && ln -s /opt/oracle/instantclient/libocci.so.19.1 /opt/oracle/instantclient/libocci.so \
-    && echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf \
-    && ldconfig
+RUN mkdir /opt/oracle && chmod 777 /opt/oracle
+RUN cd /opt/oracle
+RUN curl -o /opt/oracle/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip https://download.oracle.com/otn_software/linux/instantclient/198000/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip
+RUN curl -o /opt/oracle/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip https://download.oracle.com/otn_software/linux/instantclient/198000/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip
+RUN unzip /opt/oracle/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip
+RUN unzip /opt/oracle/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip
+RUN rm -f *.zip
+RUN mv /opt/oracle/instantclient_19_8 /opt/oracle/instantclient
+RUN ln -s /opt/oracle/instantclient/libclntsh.so.19.1 /opt/oracle/instantclient/libclntsh.so
+RUN ln -s /opt/oracle/instantclient/libocci.so.19.1 /opt/oracle/instantclient/libocci.so
+RUN echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf
+RUN ldconfig
 
 # 安装Oracle扩展
 RUN echo 'instantclient,/opt/oracle/instantclient' | pecl install oci8 \
