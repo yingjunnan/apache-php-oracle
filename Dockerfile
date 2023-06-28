@@ -19,6 +19,7 @@ RUN pecl install redis && docker-php-ext-enable redis
 # 下载并安装Oracle Instant Client
 RUN mkdir /opt/oracle \
     && cd /opt/oracle \
+    && chmod 777 /opt/oracle \
     && curl -o instantclient-basic-linux.x64-19.8.0.0.0dbru.zip https://download.oracle.com/otn_software/linux/instantclient/198000/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip \
     && curl -o instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip https://download.oracle.com/otn_software/linux/instantclient/198000/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip \
     && unzip instantclient-basic-linux.x64-19.8.0.0.0dbru.zip \
