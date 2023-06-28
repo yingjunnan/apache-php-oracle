@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 设置环境变量
-ENV ORACLE_HOME=/usr/lib/oracle/12.2/client64
+ENV ORACLE_HOME=/opt/oracle/instantclient
 ENV LD_LIBRARY_PATH=$ORACLE_HOME/lib
 ENV PATH=$ORACLE_HOME/bin:$PATH
 
@@ -25,19 +25,20 @@ RUN pecl install redis && docker-php-ext-enable redis
 ADD https://download.oracle.com/otn_software/linux/instantclient/19800/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip /tmp/
 ADD https://download.oracle.com/otn_software/linux/instantclient/198000/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip /tmp/
 
-RUN mkdir -p /usr/lib/oracle/12.2 && chmod 777 /usr/lib/oracle/12.2
+RUN mkdir -p /opt/oracle/instantclient && chmod 777 /opt/oracle/instantclient
 
 # 解压安装包并设置Oracle环境变量
-RUN unzip /tmp/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip -d /usr/lib/oracle/12.2/ && \
-    unzip /tmp/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip -d /usr/lib/oracle/12.2/ && \
+RUN unzip /tmp/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip -d /opt/oracle/instantclient && \
+    unzip /tmp/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip -d /opt/oracle/instantclient && \
     rm /tmp/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip && \
     rm /tmp/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip && \
-    ln -s /usr/lib/oracle/12.2/instantclient_19_8 $ORACLE_HOME && \
-    echo $ORACLE_HOME > /etc/ld.so.conf.d/oracle.conf && \
-    ldconfig
+    && ln -s /opt/oracle/instantclient/libclntsh.so.19.1 /opt/oracle/instantclient/libclntsh.so \
+    && ln -s /opt/oracle/instantclient/libocci.so.19.1 /opt/oracle/instantclient/libocci.so \
+    && echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf \
+    && ldconfig
 
 # 安装Oracle扩展
-RUN echo 'instantclient,/usr/lib/oracle/12.2/client64' | pecl install oci8-2.2.0 \
+RUN echo 'instantclient,/opt/oracle/instantclient' | pecl install oci8-2.2.0 \
     && docker-php-ext-enable oci8
 
 # 启用Apache的rewrite模块
