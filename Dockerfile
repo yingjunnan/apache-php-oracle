@@ -34,7 +34,7 @@ RUN unzip /tmp/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip -d /usr/lib/orac
     ldconfig
 
 # 安装Oracle扩展
-RUN echo 'instantclient,/opt/oracle/instantclient' | pecl install oci8 \
+RUN echo 'instantclient,/opt/oracle/instantclient' | pecl install oci8-2.2.0 \
     && docker-php-ext-enable oci8
 
 # 启用Apache的rewrite模块
