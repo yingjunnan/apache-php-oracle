@@ -22,16 +22,16 @@ RUN docker-php-ext-install pdo_mysql mysqli
 RUN pecl install redis && docker-php-ext-enable redis
 
 # 下载Oracle Instant Client安装包
-ADD https://download.oracle.com/otn_software/linux/instantclient/19800/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip /tmp/
-ADD https://download.oracle.com/otn_software/linux/instantclient/198000/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip /tmp/
+ADD https://download.oracle.com/otn_software/linux/instantclient/19800/instantclient-basic-linux.x64-19.19.0.0.0dbru.zip /tmp/
+ADD https://download.oracle.com/otn_software/linux/instantclient/1919000/instantclient-sdk-linux.x64-19.19.0.0.0dbru.zip /tmp/
 
 RUN mkdir -p /opt/oracle/instantclient && chmod 777 /opt/oracle/instantclient
 
 # 解压安装包并设置Oracle环境变量
-RUN unzip /tmp/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip -d /opt/oracle/instantclient && \
-    unzip /tmp/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip -d /opt/oracle/instantclient && \
-    rm /tmp/instantclient-basic-linux.x64-19.8.0.0.0dbru.zip && \
-    rm /tmp/instantclient-sdk-linux.x64-19.8.0.0.0dbru.zip && \
+RUN unzip /tmp/instantclient-basic-linux.x64-19.19.0.0.0dbru.zip -d /opt/oracle/instantclient && \
+    unzip /tmp/instantclient-sdk-linux.x64-19.19.0.0.0dbru.zip -d /opt/oracle/instantclient && \
+    rm /tmp/instantclient-basic-linux.x64-19.19.0.0.0dbru.zip && \
+    rm /tmp/instantclient-sdk-linux.x64-19.19.0.0.0dbru.zip && \
     && ln -s /opt/oracle/instantclient/libclntsh.so.19.1 /opt/oracle/instantclient/libclntsh.so \
     && ln -s /opt/oracle/instantclient/libocci.so.19.1 /opt/oracle/instantclient/libocci.so \
     && echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf \
