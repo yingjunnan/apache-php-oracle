@@ -1,5 +1,5 @@
 # 使用官方的PHP 7.4作为基础镜像
-FROM php:7.4-apache
+FROM registry.cn-beijing.aliyuncs.com/yingjunnan/php:7.4-apache
 
 # 安装所需的软件包和依赖
 RUN apt-get update && apt-get install -y \
