@@ -10,8 +10,11 @@ RUN apt-get update && apt-get install -y \
 RUN mkdir /opt/oracle \
     && cd /opt/oracle \
     && wget https://download.oracle.com/otn_software/linux/instantclient/199000/instantclient-basic-linux.x64-19.9.0.0.0dbru.zip \
+    && wget https://download.oracle.com/otn_software/linux/instantclient/199000/instantclient-sdk-linux.x64-19.9.0.0.0dbru.zip \
     && unzip instantclient-basic-linux.x64-19.9.0.0.0dbru.zip \
+    && unzip instantclient-sdk-linux.x64-19.9.0.0.0dbru.zip \
     && rm instantclient-basic-linux.x64-19.9.0.0.0dbru.zip \
+    && rm instantclient-sdk-linux.x64-19.9.0.0.0dbru.zip \
     && rm -rf /var/lib/apt/lists/*
 # �~P��~T�Apache�~Z~Drewrite模�~]~W
 # 设置Oracle Instant Client�~N��~C�~O~X�~G~O
