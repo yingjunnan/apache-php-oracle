@@ -9,18 +9,19 @@ RUN apt-get update && apt-get install -y \
 
 RUN mkdir /opt/oracle \
     && cd /opt/oracle \
-    && wget https://download.oracle.com/otn_software/linux/instantclient/199000/instantclient-basic-linux.x64-19.9.0.0.0dbru.zip \
-    && wget https://download.oracle.com/otn_software/linux/instantclient/199000/instantclient-sdk-linux.x64-19.9.0.0.0dbru.zip \
-    && unzip instantclient-basic-linux.x64-19.9.0.0.0dbru.zip \
-    && unzip instantclient-sdk-linux.x64-19.9.0.0.0dbru.zip \
-    && rm instantclient-basic-linux.x64-19.9.0.0.0dbru.zip \
-    && rm instantclient-sdk-linux.x64-19.9.0.0.0dbru.zip \
+    && wget https://download.oracle.com/otn/linux/instantclient/11204/instantclient-basic-linux.x64-11.2.0.4.0.zip?AuthParam=1688955983_912e3ee6db80d07495bfbdea5265cd63 \
+    && wget https://download.oracle.com/otn/linux/instantclient/11204/instantclient-sdk-linux.x64-11.2.0.4.0.zip?AuthParam=1688956011_c36b482f5df52bde4f1e1731c11599e2 \
+    && unzip instantclient-basic-linux.x64-11.2.0.4.0.zip \
+    && unzip instantclient-sdk-linux.x64-11.2.0.4.0.zip \
+    && rm instantclient-basic-linux.x64-11.2.0.4.0.zip \
+    && rm instantclient-sdk-linux.x64-11.2.0.4.0.zip \
     && rm -rf /var/lib/apt/lists/*
 # �~P��~T�Apache�~Z~Drewrite模�~]~W
 # 设置Oracle Instant Client�~N��~C�~O~X�~G~O
-ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_19_9
+ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_11_2
+ENV ORACLE_HOME=/opt/oracle/instantclient_11_2
 
-RUN docker-php-ext-configure oci8 --with-oci8=instantclient,/opt/oracle/instantclient_19_9 && \
+RUN docker-php-ext-configure oci8 --with-oci8=instantclient,/opt/oracle/instantclient_11_2 && \
     docker-php-ext-install oci8
     
 RUN a2enmod rewrite
