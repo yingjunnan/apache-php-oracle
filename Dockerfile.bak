@@ -32,5 +32,6 @@ RUN docker-php-ext-configure oci8 --with-oci8=instantclient,/opt/oracle/instantc
     docker-php-ext-install oci8
     
 RUN a2enmod rewrite
+# 
 
 
